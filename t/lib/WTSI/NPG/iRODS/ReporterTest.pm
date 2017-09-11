@@ -10,6 +10,10 @@ use Log::Log4perl;
 use Test::Exception;
 use Test::More;
 
+use WTSI::NPG::TestMQiRODS;
+use WTSI::NPG::TestMQPublisher;
+use WTSI::NPG::RabbitMQ::TestCommunicator;
+
 use base qw[WTSI::NPG::iRODS::TestRabbitMQ];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
@@ -38,13 +42,13 @@ my $irods_class      = 'WTSI::NPG::TestMQiRODS';
 my $publisher_class  = 'WTSI::NPG::TestMQPublisher';
 my $communicator_class = 'WTSI::NPG::RabbitMQ::TestCommunicator';
 
-eval "require $irods_class";
-eval "require $publisher_class";
-eval "require $communicator_class";
+# eval "require $irods_class";
+# eval "require $publisher_class";
+# eval "require $communicator_class";
 
-$irods_class->import;
-$publisher_class->import;
-$communicator_class->import;
+# $irods_class->import;
+# $publisher_class->import;
+# $communicator_class->import;
 
 
 # Each test has a channel number, equal to $test_counter. The channel
