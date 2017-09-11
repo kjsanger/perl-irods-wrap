@@ -538,6 +538,8 @@ sub test_publish_object : Test(14) {
     is(scalar @messages, 1, 'Got 1 message from queue');
     my $message = shift @messages;
     my $method = 'publish';
+
+    diag explain [$remote_file_path, $message];
     _test_object_message($message, $method);
     $publisher->rmq_disconnect();
 }
