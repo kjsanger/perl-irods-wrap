@@ -10,4 +10,4 @@ export WTSI_NPG_iRODS_Test_Resource=testResc
 
 perl Build.PL
 ./Build clean
-./Build test
+./Build test --test_files t/reporter.t --verbose
