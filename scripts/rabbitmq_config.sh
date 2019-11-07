@@ -11,4 +11,3 @@ sudo rabbitmqctl status
 sudo rabbitmqctl list_exchanges -p test_vhost
 sudo rabbitmqctl list_queues -p test_vhost
 sudo rabbitmqctl list_bindings -p test_vhost
-
