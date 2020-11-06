@@ -461,7 +461,7 @@ sub replicates : Test(16) {
 
  SKIP: {
     if (system("ilsresc $alt_resource >/dev/null") != 0) {
-      skip "iRODS resource $alt_resource is unavilable", 11;
+      skip "iRODS resource $alt_resource is unavailable", 11;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -469,8 +469,9 @@ sub replicates : Test(16) {
     my $obj_path = "$irods_tmp_coll/path/test_dir/test_file.txt";
     my $obj_md5 = '6066a5385023de0c2c45e590c748cbd9';
 
-    system("irepl $obj_path -R $alt_resource >/dev/null") == 0
-      or die "Failed to replicate $obj_path to $alt_resource: $ERRNO";
+    system("irepl $obj_path -S $repl_resource -R $alt_resource >/dev/null") == 0
+      or die "Failed to replicate $obj_path from " .
+             "$repl_resource to $alt_resource: $ERRNO";
     system("ichksum -a $obj_path >/dev/null") == 0
       or die "Failed to update checksum on replicates of $obj_path: $ERRNO";
 
@@ -498,7 +499,7 @@ sub replicates : Test(16) {
 sub invalid_replicates :Test(5) {
   SKIP: {
     if (system("ilsresc $alt_resource >/dev/null") != 0) {
-      skip "iRODS resource $alt_resource is unavilable", 3;
+      skip "iRODS resource $alt_resource is unavailable", 3;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -512,9 +513,11 @@ sub invalid_replicates :Test(5) {
     # Make the original replicates stale
     my $other_path = "./t/data/irods/test.txt";
     system("irepl -S $repl_resource -R $alt_resource $obj_path >/dev/null") == 0
-      or die "Failed to make a replicate on $alt_resource: $ERRNO";
+      or die "Failed to replicate $obj_path from " .
+             "$repl_resource to $alt_resource: $ERRNO";
     system("iput -f -R $alt_resource $other_path $obj_path >/dev/null") == 0
-      or die "Failed to make an invalid replicate: $ERRNO";
+      or die "Failed to update a replicate of $obj_path on $alt_resource:
+$ERRNO";
 
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $obj_path);
 
@@ -545,7 +548,8 @@ sub prune_replicates : Test(7) {
     my $obj_md5 = '6066a5385023de0c2c45e590c748cbd9';
 
     system("irepl -S $repl_resource -R $alt_resource $obj_path >/dev/null") == 0
-      or die "Failed to replicate $obj_path to $alt_resource: $ERRNO";
+      or die "Failed to replicate $obj_path from " .
+             "$repl_resource to $alt_resource: $ERRNO";
     system("ichksum -a $obj_path >/dev/null") == 0
       or die "Failed to update checksum on replicates of $obj_path: $ERRNO";
 
@@ -553,7 +557,8 @@ sub prune_replicates : Test(7) {
     my $other_path = "./t/data/irods/test.txt";
     my $other_md5 = '2205e48de5f93c784733ffcca841d2b5';
     system("iput -f -R $alt_resource $other_path $obj_path >/dev/null") == 0
-      or die "Failed to make an invalid replicate: $ERRNO";
+      or die  "Failed to update a replicate of $obj_path on $alt_resource:
+$ERRNO";
 
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $obj_path);
 

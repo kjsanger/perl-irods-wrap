@@ -1301,7 +1301,7 @@ sub invalid_replicates : Test(5) {
 
  SKIP: {
     if (system("ilsresc $alt_resource >/dev/null") != 0) {
-      skip "iRODS resource $alt_resource is unavilable", 3;
+      skip "iRODS resource $alt_resource is unavailable", 3;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1315,9 +1315,10 @@ sub invalid_replicates : Test(5) {
     # Make the original replicates on the replication resource stale
     my $other_object = "$data_path/test.txt";
     system("irepl -S $repl_resource -R $alt_resource $lorem_object >/dev/null") == 0
-     or die "Failed to make a replicate on $alt_resource: $ERRNO";
+     or die "Failed to replicate $lorem_object from " .
+            "$repl_resource to $alt_resource: $ERRNO";
     system("iput -f -R $alt_resource $other_object $lorem_object >/dev/null") == 0 or
-      die "Failed to make an invalid replicate: $ERRNO";
+      die "Failed to update a replicate of $lorem_object on $alt_resource: $ERRNO";
 
     my @invalid_replicates = $irods->invalid_replicates($lorem_object);
     cmp_ok(scalar @invalid_replicates, '==', 2,
@@ -1337,7 +1338,7 @@ sub prune_replicates : Test(8) {
 
   SKIP: {
     if (system("ilsresc $alt_resource >/dev/null") != 0) {
-      skip "iRODS resource $alt_resource is unavilable", 6;
+      skip "iRODS resource $alt_resource is unavailable", 6;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment => \%ENV,
@@ -1354,9 +1355,11 @@ sub prune_replicates : Test(8) {
     # Make the original replicates on the replication resource stale
     my $other_object = "$data_path/test.txt";
     system("irepl -S $repl_resource -R $alt_resource $lorem_object >/dev/null") == 0
-      or die "Failed to make a replicate on $alt_resource: $ERRNO";
+      or die "Failed to replicate $lorem_object from " .
+             "$repl_resource to $alt_resource: $ERRNO";
     system("iput -f -R $alt_resource $other_object $lorem_object >/dev/null") == 0 or
-      die "Failed to make an invalid replicate: $ERRNO";
+      die "Failed to update a replicate of $lorem_object on $alt_resource:
+$ERRNO";
 
     my @pruned_replicates = $irods->prune_replicates($lorem_object);
     cmp_ok(scalar @pruned_replicates, '==', 2,
