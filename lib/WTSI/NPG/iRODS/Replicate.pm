@@ -36,6 +36,14 @@ has 'valid' =>
    required      => 1,
    documentation => 'The state of the replicate as reported by iRODS.');
 
+has 'physical_path' =>
+  (is            => 'ro',
+   isa           => 'Maybe[Str]',
+   required      => 0,
+   documentation => 'The physical path of the replicate on the resource ' .
+                     'server filesystem. Reported by baton >= 6.1.0 only; ' .
+                     'undefined when using an older baton version.');
+
 sub is_valid {
   my ($self) = @_;
 
@@ -58,7 +66,9 @@ characteristics of an iRODS data object;
 =head1 DESCRIPTION
 
 Describes a single replicate of an iRODS data object in terms of its
-replicate number, checksum, resource, location and status.
+replicate number, checksum, resource, location, status and (where
+reported by the baton client, version >= 6.1.0) its physical path on
+the resource server filesystem.
 
 =head1 AUTHOR
 
