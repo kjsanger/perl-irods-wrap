@@ -1,7 +1,10 @@
 Unreleased
+
+Release 3.29.0 (2026-07-23)
  - Accept the physical_path field added to replicate listings by
    baton >= 6.1.0; older baton versions that do not report it are
    unaffected
+ - CI updates
 
 Release 3.28.2 (2026-04-16)
  - Remove workaround for IPC::Run caching bug fixed in 20260322.0
